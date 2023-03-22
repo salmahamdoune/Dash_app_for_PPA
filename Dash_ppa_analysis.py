@@ -42,7 +42,7 @@ dicts_designs = [json.loads(df_plot['design'].unique()[i]) for i in range(len(df
 
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-
+server = app.server
 app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
