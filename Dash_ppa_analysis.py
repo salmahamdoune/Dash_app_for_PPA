@@ -81,14 +81,49 @@ app.layout = dbc.Container([
 )
 
 
-#def update_output_div(dropdown_design):
+
+#def update_3d_graph(dropdown_design):
 #    new_output = dropdown_design.replace("'",'"')
-#    return f'Output: {new_output}'
+#    df_plot_design = df_plot[df_plot['design']==new_output]
+ #   fig_3d = px.scatter_3d(df_plot_design, x='Volume (%)', y='Duration (Years)', z='irr', color = "Price (€/MWh)", size_max=20)
+ #   return fig_3d
+
 def update_3d_graph(dropdown_design):
     new_output = dropdown_design.replace("'",'"')
     df_plot_design = df_plot[df_plot['design']==new_output]
-    fig_3d = px.scatter_3d(df_plot_design, x='Volume (%)', y='Duration (Years)', z='irr', color = "Price (€/MWh)", size_max=20)
-    return fig_3d
+    #fig_3d = px.scatter_3d(df_plot_design, x='Volume (%)', y='Duration (Years)', z='irr', color = "Price (€/MWh)", size_max=20)
+    
+    x = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==100]['Volume (%)'])
+    y = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==100]['Duration (Years)'])
+    z = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==100]['irr'])
+
+    x1 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==50]['Volume (%)'])
+    y1 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==50]['Duration (Years)'])
+    z1 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==50]['irr'])
+
+    x2 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==75]['Volume (%)'])
+    y2 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==75]['Duration (Years)'])
+    z2 = np.array(df_plot_design[df_plot_design['Price (€/MWh)']==75]['irr'])
+
+    fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z, color='green', opacity=0.50, name="Price = 100 €/MWh",
+                                       hovertemplate='Volume (%): %{x}<br>Duration (Years): %{y}<br>Irr (%): %{z}<extra></extra>',showlegend=True)])
+
+    fig.add_trace(go.Mesh3d(x=x2, y=y2, z=z2, color='cyan', opacity=0.50,name="Price = 75 €/MWh",
+                            hovertemplate='Volume (%): %{x}<br>Duration (Years): %{y}<br>Irr (%): %{z}<extra></extra>',
+                           showlegend=True),)
+
+    fig.add_trace(go.Mesh3d(x=x1, y=y1, z=z1, color='magenta', opacity=0.50,name="Price = 50 €/MWh",
+                            hovertemplate='Volume (%): %{x}<br>Duration (Years): %{y}<br>Irr (%): %{z}<extra></extra>',showlegend=True))
+
+
+    fig.update_layout(scene = dict(
+                        xaxis_title='Volume (%)',
+                        yaxis_title='Duration (Years)',
+                        zaxis_title='Irr (%)'),)
+    
+    
+    
+    return fig
 
 #app.run_server(debug=True, use_reloader=False)  # Turn off reloader if inside Jupyter
 
